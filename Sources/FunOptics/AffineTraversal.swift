@@ -8,21 +8,24 @@
 ///   - https://julien-truffaut.github.io/Monocle/optics/optional.html
 public struct AffineTraversal<Whole, Part>
 {
-    let tryGet: (Whole) -> Part?
-    let setter: (Whole, Part) -> Whole
+    public let tryGet: (Whole) -> Part?
+    public let setter: (Whole, Part) -> Whole
 
-    init(tryGet: @escaping (Whole) -> Part?, setter: @escaping (Whole, Part) -> Whole)
+    public init(
+        tryGet: @escaping (Whole) -> Part?,
+        setter: @escaping (Whole, Part) -> Whole
+    )
     {
         self.tryGet = tryGet
         self.setter = setter
     }
 
-    init(lens: Lens<Whole, Part>)
+    public init(lens: Lens<Whole, Part>)
     {
         self.init(tryGet: lens.get, setter: lens.set)
     }
 
-    init(prism: Prism<Whole, Part>)
+    public init(prism: Prism<Whole, Part>)
     {
         self.init(tryGet: prism.tryGet, setter: { prism.inject($1) })
     }
