@@ -9,25 +9,25 @@
 public struct AffineTraversal<Whole, Part>
 {
     public let tryGet: (Whole) -> Part?
-    public let setter: (Whole, Part) -> Whole
+    public let set: (Whole, Part) -> Whole
 
     public init(
         tryGet: @escaping (Whole) -> Part?,
-        setter: @escaping (Whole, Part) -> Whole
+        set: @escaping (Whole, Part) -> Whole
     )
     {
         self.tryGet = tryGet
-        self.setter = setter
+        self.set = set
     }
 
     public init(lens: Lens<Whole, Part>)
     {
-        self.init(tryGet: lens.get, setter: lens.set)
+        self.init(tryGet: lens.get, set: lens.set)
     }
 
     public init(prism: Prism<Whole, Part>)
     {
-        self.init(tryGet: prism.tryGet, setter: { prism.inject($1) })
+        self.init(tryGet: prism.tryGet, set: { prism.inject($1) })
     }
 }
 
@@ -39,9 +39,9 @@ extension AffineTraversal
             tryGet: { whole -> Part2? in
                 l.tryGet(whole).flatMap { r.tryGet($0) }
             },
-            setter: { whole, part2 -> Whole in
+            set: { whole, part2 -> Whole in
                 if let part = l.tryGet(whole) {
-                    return l.setter(whole, r.setter(part, part2))
+                    return l.set(whole, r.set(part, part2))
                 }
                 else {
                     return whole
