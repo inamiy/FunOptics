@@ -22,3 +22,19 @@ public struct Lens<Whole, Part>
         )
     }
 }
+
+extension Lens
+{
+    /// Creates `Lens` from `WritableKeyPath`.
+    public init(_ keyPath: WritableKeyPath<Whole, Part>)
+    {
+        self.init(
+            get: { $0[keyPath: keyPath] },
+            set: { whole, part in
+                var whole = whole
+                whole[keyPath: keyPath] = part
+                return whole
+            }
+        )
+    }
+}
