@@ -80,3 +80,46 @@ public func >>> <Whole, Part, Part2>(l: AffineTraversal<Whole, Part>, r: Prism<P
 {
     return l >>> .init(prism: r)
 }
+
+// MARK: - Enum-property to AffineTraversal
+
+/// Makes `AffineTraversal` from enum-property (enum case's computed get-set property).
+///
+/// ## Example
+///
+/// ```
+/// struct EnumState {
+///     case pattern1(Int)
+///     ...
+///
+///     var pattern1: Int? { // Enum computed get-set property.
+///         get {
+///             guard case let .pattern1(value) = self else { return nil }
+///             return value
+///         }
+///         set {
+///             guard case .pattern1 = self, let newValue = newValue else { return }
+///             self = .pattern1(newValue)
+///         }
+///     }
+/// }
+///
+/// let affineTraversal: AffineTraversal<EnumState, Int> = fromEnumProperty(\EnumState.pattern1)
+/// ```
+///
+/// - SeeAlso: https://github.com/pointfreeco/swift-enum-properties
+///
+/// - Note: This is a workaround of Swift that is not able to create `Prism` from KeyPath syntax.
+public func fromEnumProperty<Whole, Part>(
+    _ keyPath: WritableKeyPath<Whole, Part?>
+) -> AffineTraversal<Whole, Part>
+{
+    .init(
+        tryGet: { $0[keyPath: keyPath] },
+        set: { whole, part in
+            var whole = whole
+            whole[keyPath: keyPath] = part
+            return whole
+        }
+    )
+}
