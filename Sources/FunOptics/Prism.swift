@@ -24,12 +24,12 @@ public struct Prism<Whole, Part>
 
 public func some<A>() -> Prism<A?, A>
 {
-    return Prism<A?, A>.init(tryGet: { $0 }, inject: { $0 })
+    return Prism<A?, A>(tryGet: { $0 }, inject: { $0 })
 }
 
 public func none<A>() -> Prism<A?, ()>
 {
-    return Prism<A?, ()>.init(
+    return Prism<A?, ()>(
         tryGet: {
             switch $0 {
             case .none: return ()
@@ -38,4 +38,17 @@ public func none<A>() -> Prism<A?, ()>
         },
         inject: { .none }
     )
+}
+
+extension Prism where Part == Never
+{
+    public static var never: Prism<Whole, Never>
+    {
+        func absurd<A>(_ x: Never) -> A {}
+
+        return Prism<Whole, Never>(
+            tryGet: { _ in .none },
+            inject: absurd
+        )
+    }
 }
