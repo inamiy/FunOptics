@@ -130,12 +130,5 @@ public func fromEnumProperty<Whole, Part>(
     _ keyPath: WritableKeyPath<Whole, Part?>
 ) -> AffineTraversal<Whole, Part>
 {
-    .init(
-        tryGet: { $0[keyPath: keyPath] },
-        set: { whole, part in
-            var whole = whole
-            whole[keyPath: keyPath] = part
-            return whole
-        }
-    )
+    .fromEnum(keyPath)
 }
