@@ -90,7 +90,7 @@ extension AffineTraversal
     /// ## Example
     ///
     /// ```
-    /// struct EnumState {
+    /// enum EnumState {
     ///     case pattern1(Int)
     ///     ...
     ///
