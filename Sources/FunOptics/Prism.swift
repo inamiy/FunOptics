@@ -52,3 +52,23 @@ extension Prism where Part == Never
         )
     }
 }
+
+// - MARK: https://github.com/pointfreeco/swift-case-paths
+
+import CasePaths
+
+extension Prism
+{
+    public init(_ casePath: CasePath<Whole, Part>)
+    {
+        self.init(tryGet: casePath.extract, inject: casePath.embed)
+    }
+}
+
+extension CasePath
+{
+    public static func >>> <Value2>(l: CasePath<Root, Value>, r: CasePath<Value, Value2>) -> CasePath<Root, Value2>
+    {
+        return l .. r
+    }
+}

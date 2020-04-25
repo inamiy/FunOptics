@@ -10,11 +10,12 @@ let package = Package(
             targets: ["FunOptics"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "0.1.0"),
     ],
     targets: [
         .target(
             name: "FunOptics",
-            dependencies: []),
+            dependencies: ["CasePaths"]),
         .testTarget(
             name: "FunOpticsTests",
             dependencies: ["FunOptics"]),
